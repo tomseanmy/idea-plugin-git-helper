@@ -2,11 +2,23 @@
 
 打 tag 即自动发布到 JetBrains Marketplace。下面是一次性配置步骤。
 
-## 一、注册插件（首次）
+## 一、注册插件（首次，必须手动一次）
 
-1. 打开 https://plugins.jetbrains.com/ ，用 JetBrains 账号登录
-2. 右上角头像 → **Upload Plugin** 先不用，先去 **My Account → Plugins** 记下你的**供应商账号**
-3. 插件首次上传后，会进入审核（人工，通常 1-3 个工作日）
+> ⚠️ **关键前置**：JetBrains Marketplace 要求插件**首次必须手动上传一次**，建立插件记录（填 license、仓库 URL 等元数据）。CI 自动发布只能发布「已存在插件的新版本」，**无法创建插件本身**。否则 CI 会报：
+> ```
+> Cannot find plugin. Note that you need to upload the plugin to the repository at least once manually.
+> ```
+
+**手动上传步骤（只做一次）：**
+1. 用 `./gradlew buildPlugin` 构建，产物在 `build/distributions/*.zip`
+2. 打开 https://plugins.jetbrains.com/ 登录
+3. 点 **Upload Plugin**，选 zip，填写：
+   - License（如 MIT）
+   - Repository URL（你的 GitHub 仓库地址）
+   - 其他必填信息
+4. 提交 → 等待人工审核（1-3 工作日）
+
+审核通过后，插件记录就建立了，**之后 CI 才能 `publishPlugin` 推新版本**。
 
 ## 二、生成上传 Token
 
