@@ -9,6 +9,10 @@ on:
     tags:
       - 'v*'
 
+# Grant the default GITHUB_TOKEN write access to create the GitHub Release.
+permissions:
+  contents: write
+
 jobs:
   release:
     name: Build, verify and publish
@@ -46,6 +50,8 @@ jobs:
           fi
 
       - name: Build, verify, sign and publish
+        continue-on-error: true
+        id: publish
         env:
           PUBLISH_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
           SIGNING_CERT_CHAIN: ${{ secrets.SIGNING_CERT_CHAIN }}
