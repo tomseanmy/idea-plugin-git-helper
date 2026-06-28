@@ -1,0 +1,52 @@
+<idea-plugin>
+    <id>com.github.tomseanmy.git-helper</id>
+    <name>Git Helper</name>
+    <vendor email="tomseanmy@github.com" url="https://tomseanmy.github.io">tomseanmy</vendor>
+
+    <description><![CDATA[
+        <h3>Git Helper</h3>
+        Generate AI-powered Git commit messages from your staged diff.
+        Bring your own provider — fully configurable OpenAI / Anthropic compatible endpoints.
+        <br/><br/>
+        Lightweight, free, local-first.
+    ]]></description>
+
+    <!-- 2025.3 -->
+    <idea-version since-build="253" until-build="253.*"/>
+
+    <depends>com.intellij.modules.platform</depends>
+    <depends>Git4Idea</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Settings: Tools > Git Helper -->
+        <applicationConfigurable
+            parentId="tools"
+            instance="com.github.tomseanmy.githelper.settings.GitHelperConfigurable"
+            id="com.github.tomseanmy.githelper.settings.GitHelperConfigurable"
+            displayName="Git Helper"
+            nonDefaultProject="true"/>
+        <applicationService
+            serviceImplementation="com.github.tomseanmy.githelper.settings.GitHelperSettings"/>
+        <!-- Notification group -->
+        <notificationGroup id="Git Helper" displayType="STICKY_BALLOON"/>
+    </extensions>
+
+    <actions>
+        <!-- Generate Commit Message action -->
+        <action
+            id="GitHelper.GenerateCommitMessage"
+            class="com.github.tomseanmy.githelper.action.GenerateCommitMessageAction"
+            text="Generate Commit Message"
+            description="Generate an AI commit message from the staged diff">
+            <keyboard-shortcut keymap="$default" first-keystroke="control shift G"/>
+            <!-- Primary entry: the small toolbar right next to the commit message input field.
+                 (ChangesView.CommitToolbar already references this group, so adding here covers both.) -->
+            <add-to-group group-id="Vcs.MessageActionGroup" anchor="last"/>
+            <!-- Top-level VCS menu -->
+            <add-to-group group-id="Vcs.MainMenu" anchor="last"/>
+            <!-- Editor / commit message context menu -->
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+        </action>
+    </actions>
+
+</idea-plugin>
