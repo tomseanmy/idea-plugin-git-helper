@@ -3,7 +3,7 @@ import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 // ---------- Plugins ----------
 plugins {
     id("java")
-    id("org.jetbrains.kotlin.jvm") version "2.2.20"
+    id("org.jetbrains.kotlin.jvm") version "2.4.0"
     id("org.jetbrains.intellij.platform") version "2.12.0"
 }
 
@@ -16,6 +16,8 @@ repositories {
     mavenCentral()
     intellijPlatform {
         defaultRepositories()
+        // EAP builds (e.g. 262-EAP-SNAPSHOT) live in the snapshots repo.
+        snapshots()
     }
 }
 

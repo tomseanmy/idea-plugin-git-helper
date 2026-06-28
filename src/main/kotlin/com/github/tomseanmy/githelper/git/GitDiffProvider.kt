@@ -111,9 +111,9 @@ class GitDiffProvider(private val project: Project) {
         val rootPath = File(gitRoot).canonicalFile.toPath()
         val result = mgr.allChanges.mapNotNull { change ->
             val rev = change.afterRevision ?: change.beforeRevision ?: return@mapNotNull null
-            val nioPath = rev.file?.virtualFile?.canonicalFile?.toNioPath() ?: return@mapNotNull null
+            val nioPath = rev.file.virtualFile?.canonicalFile?.toNioPath() ?: return@mapNotNull null
             val rel = rootPath.relativize(nioPath.normalize()).toString().replace(File.separatorChar, '/')
-            rel to (change.type ?: Change.Type.MODIFICATION)
+            rel to change.type
         }.distinctBy { it.first }
         log.info("IDE changelist: ${result.size} changes")
         result
