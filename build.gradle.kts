@@ -50,6 +50,28 @@ intellijPlatform {
             recommended()
         }
     }
+    // Publishing to JetBrains Marketplace. The token is read from the
+    // PUBLISH_TOKEN env var (set in GitHub Actions secrets); it is never
+    // hard-coded. `publishPlugin` signs then uploads the built zip.
+    publishing {
+        // The upload token for JetBrains Marketplace. Read from the PUBLISH_TOKEN
+        // env var (GitHub Actions secret) or a Gradle property; never hard-coded.
+        token = providers.environmentVariable("PUBLISH_TOKEN")
+            .orElse(providers.gradleProperty("publishToken"))
+    }
+    // Plugin signing. The signing certificate is issued by JetBrains AFTER your
+    // first plugin upload is approved — so it is NOT available on the first
+    // release. We therefore make signing optional: the providers resolve to the
+    // env/gradle values when present, and the signPlugin task no-ops when they
+    // are absent. (Unsigned plugins still upload fine, just with an IDE warning.)
+    signing {
+        certificateChain = providers.environmentVariable("SIGNING_CERT_CHAIN")
+            .orElse(providers.gradleProperty("signingCertificateChain"))
+        privateKey = providers.environmentVariable("SIGNING_PRIVATE_KEY")
+            .orElse(providers.gradleProperty("signingPrivateKey"))
+        password = providers.environmentVariable("SIGNING_PASSWORD")
+            .orElse(providers.gradleProperty("signingPassword"))
+    }
 }
 
 // ---------- Kotlin / Java ----------
